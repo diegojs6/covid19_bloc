@@ -2,20 +2,20 @@ import 'package:http/http.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 
 abstract class IHttpClient {
-  Future<Response> get(Uri endPoint, {Map<String, String> headers});
+  Future<Response> get(String? endPoint, {Map<String, String> headers});
 }
 
 class HttpClient extends IHttpClient implements InterceptorContract {
   late HttpClientWithInterceptor _client;
 
-  HttpClient(){
+  HttpClient() {
     _client = HttpClientWithInterceptor.build(interceptors: [this]);
   }
 
   @override
-  Future<Response> get(Uri endPoint, {Map<String, String>? headers}) async {
+  Future<Response> get(String? endPoint, {Map<String, String>? headers}) async {
     final response = await _client.get(
-      endPoint,
+      endPoint!.toUri(),
       headers: {'Content-Type': 'application/json'},
     );
     return response;
