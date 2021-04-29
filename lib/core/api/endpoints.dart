@@ -1,5 +1,5 @@
 class Endpoints {
-  static const countrieWorld = 'all';
-  static const countrieBrazil = '/brazil';
+  static const countrieWorld = 'v2/all';
+  static const countrieBrazil = 'v2/countries/brazil';
   static const countrieCanada = '/canada';
 }

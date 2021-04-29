@@ -11,17 +11,22 @@ abstract class IUrlCreator {
 }
 
 class UrlCreator implements IUrlCreator {
-  static const _urlKey = "corona.lmao.ninja/v2";
+  static const _urlKey = "corona.lmao.ninja";
 
   @override
-  String create({ String? endPoint,  Map<String, dynamic>? queryParameters, List<String>? pathSegments, String scheme = 'https', int? port,}) {
-   return Uri(
-     scheme: scheme,
-     host: _urlKey,
-     port: port,
-     pathSegments: [...endPoint!.split('/'), ...(pathSegments ?? [])],
-     queryParameters: queryParameters,
-   ).toString();
+  String create({
+    String? endPoint,
+    Map<String, dynamic>? queryParameters,
+    List<String>? pathSegments,
+    String scheme = 'https',
+    int? port,
+  }) {
+    return Uri(
+      scheme: scheme,
+      host: _urlKey,
+      port: port,
+      pathSegments: [...endPoint!.split('/'), ...(pathSegments ?? [])],
+      queryParameters: queryParameters,
+    ).toString();
   }
-  
 }

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:covid19_bloc/feature/domain/entities/pais.dart';
+import 'package:covid19_bloc/feature/domain/entities/countries.dart';
 
 enum CovidStatus {
   loading,
@@ -9,7 +9,7 @@ enum CovidStatus {
 
 class CovidState extends Equatable {
   final CovidStatus status;
-  final Pais? paisEntity;
+  final Countries? paisEntity;
   final String? message;
 
   CovidState._(this.status, this.paisEntity, this.message);
@@ -24,11 +24,13 @@ class CovidState extends Equatable {
         paisEntity,
         message,
       );
-  CovidState ready(Pais entity) => CovidState._(
+
+  CovidState ready(Countries entity) => CovidState._(
         CovidStatus.ready,
         entity,
         message,
       );
+      
   CovidState erro(String msgError) => CovidState._(
         CovidStatus.error,
         paisEntity,

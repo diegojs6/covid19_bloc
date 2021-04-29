@@ -1,28 +1,27 @@
-import 'package:covid19_bloc/core/navigations/routes.dart';
 import 'package:covid19_bloc/core/utils/app_colors.dart';
 import 'package:covid19_bloc/core/utils/app_strings.dart';
-import 'package:covid19_bloc/feature/domain/entities/countries.dart';
-import 'package:covid19_bloc/feature/presentation/bloc/covid_countries_bloc/covid_bloc.dart';
-import '../bloc/covid_countries_bloc/covid_state.dart';
+import 'package:covid19_bloc/feature/domain/entities/world.dart';
+import 'package:covid19_bloc/feature/presentation/bloc/covid_world_bloc/world_bloc.dart';
 import 'package:covid19_bloc/feature/presentation/widgets/covid_tile_custom.dart';
 import 'package:covid19_bloc/feature/presentation/widgets/styled_loading.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:flutter/material.dart';
+import '../bloc/covid_world_bloc/world_bloc_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatefulWidget {
+class HomePageWorld extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageWorldState createState() => _HomePageWorldState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageWorldState extends State<HomePageWorld> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CovidBloc, CovidState>(
+    return BlocConsumer<WorldBloc, WorldState>(
       listener: (context, state) {
         switch (state.status) {
-          case CovidStatus.error:
+          case WorldStatus.error:
             Center(
               child: Text('${state.message}'),
             );
@@ -41,56 +40,46 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildBodyPais(CovidState state) {
+  Widget buildBodyWorld(WorldState state) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          buildHeader(state.paisEntity!),
+          buildHeader(state.worldEntity!),
           SizedBox(height: 20),
-          CovidTileCustom(
-            color: AppColors.orangeGray,
-            title: AppStrings.homePageInfecteds,
-            result: state.paisEntity!.critical.toString(),
-            icon: Icons.person_outline,
-          ),
-          SizedBox(height: 16),
           CovidTileCustom(
             color: AppColors.redLight,
             icon: Icons.person_pin,
             title: AppStrings.homePageDeaths,
-            result: state.paisEntity!.deathsToday.toString(),
+            result: state.worldEntity!.deaths.toString(),
+          ),
+          SizedBox(height: 16),
+          CovidTileCustom(
+            color: AppColors.orangeGray,
+            icon: Icons.person_outline,
+            title: AppStrings.homePageInfecteds,
+            result: state.worldEntity!.critical.toString(),
           ),
           SizedBox(height: 16),
           CovidTileCustom(
             color: AppColors.greenLight,
             icon: Icons.person_add,
             title: AppStrings.homePageRecovery,
-            result: state.paisEntity!.recovered.toString(),
-          ),
-          SizedBox(height: 16),
-          GestureDetector(
-            child: CovidTileCustom(
-              color: AppColors.blueWorld,
-              icon: MdiIcons.earth,
-              title: AppStrings.homePageWorld,
-              result: '',
-            ),
-            onTap: () => Navigator.pushNamed(context, Routes.worldPage),
+            result: state.worldEntity!.recovered.toString(),
           ),
         ],
       ),
     );
   }
 
-  Widget _resultBuilder(CovidState state) {
+  Widget _resultBuilder(WorldState state) {
     switch (state.status) {
-      case CovidStatus.loading:
+      case WorldStatus.loading:
         return StyledLoading(
           messenger: AppStrings.homePageLoading,
         );
-      case CovidStatus.ready:
-        return buildBodyPais(state);
+      case WorldStatus.ready:
+        return buildBodyWorld(state);
       default:
         return _error(context);
     }
@@ -104,27 +93,29 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Icon(MdiIcons.stethoscope, color: AppColors.darkGray),
+            child: Icon(
+              MdiIcons.stethoscope,
+              color: AppColors.darkGray,
+            ),
           ),
           SizedBox(
             height: 32,
           ),
           Text(
             AppStrings.homePageErrorTitle,
-            style: GoogleFonts.roboto(fontSize: 20, color: AppColors.darkGray),
+            style: GoogleFonts.roboto(
+              fontSize: 20,
+              color: AppColors.darkGray,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget buildHeader(Countries pais) {
+  Widget buildHeader(World world) {
     return Container(
-      margin: EdgeInsets.only(
-        top: 20,
-        left: 32,
-        right: 32,
-      ),
+      margin: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20),
@@ -137,22 +128,14 @@ class _HomePageState extends State<HomePage> {
         children: [
           ListTile(
             title: Text(
-              AppStrings.homePageHeaderTitle,
+              AppStrings.worldPageHeaderTitle,
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
             ),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Center(
-            child: Image.network(
-              pais.countryInfo.flag,
-              width: 150,
-            ),
-          ),
+          SizedBox(height: 5),
         ],
       ),
     );
